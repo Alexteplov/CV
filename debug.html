@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test - CV Debug</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+    .test-box { background: white; padding: 20px; margin: 20px 0; border: 2px solid #ddd; border-radius: 8px; }
+    .success { border-color: #27ae60; background: #d5f4e6; }
+    .error { border-color: #e74c3c; background: #fadbd8; }
+    .info { border-color: #3498db; background: #ebf5fb; }
+    code { background: #eee; padding: 2px 6px; border-radius: 3px; }
+    pre { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>🔍 CV Project Debug Test</h1>
+
+  <div class="test-box info">
+    <h2>📋 Checklist</h2>
+    <ol>
+      <li>Откройте <code>index.html</code> в браузере Chrome/Firefox</li>
+      <li>Нажмите F12 (Инструменты разработчика)</li>
+      <li>Перейдите во вкладку "Console" (Консоль)</li>
+      <li>Перейдите во вкладку "Network" (Сеть)</li>
+      <li>Обновите страницу (Ctrl+R)</li>
+      <li>Запишите все ошибки красного цвета</li>
+    </ol>
+  </div>
+
+  <div class="test-box info">
+    <h2>🛠️ Quick Tests</h2>
+    <h3>1. Проверка загрузки CSS:</h3>
+    <link rel="stylesheet" href="css/style.css" id="css-test">
+    <script>
+      setTimeout(() => {
+        const cssLink = document.getElementById('css-test');
+        const cssLoaded = cssLink.sheet && cssLink.sheet.cssRules;
+        document.getElementById('css-result').innerHTML = cssLoaded ?
+          '✅ CSS загружен успечно (' + cssLink.sheet.cssRules.length + ' правил)' :
+          '❌ CSS НЕ загружен или содержит ошибки';
+        document.getElementById('css-result').style.color = cssLoaded ? '#27ae60' : '#e74c3c';
+      }, 500);
+    </script>
+    <p id="css-result">⏳ Проверка...</p>
+
+    <h3>2. Проверка загрузки JS:</h3>
+    <script src="js/main.js" id="js-test"></script>
+    <script>
+      setTimeout(() => {
+        try {
+          if (typeof init === 'undefined') {
+            document.getElementById('js-result').innerHTML = '⚠️ JS загружен, но функции не найдены (возможно ошибка синтаксиса)';
+            document.getElementById('js-result').style.color = '#f39c12';
+          } else {
+            document.getElementById('js-result').innerHTML = '✅ JS загружен и инициализирован';
+            document.getElementById('js-result').style.color = '#27ae60';
+          }
+        } catch (e) {
+          document.getElementById('js-result').innerHTML = '❌ Ошибка JS: ' + e.message;
+          document.getElementById('js-result').style.color = '#e74c3c';
+        }
+      }, 1000);
+    </script>
+    <p id="js-result">⏳ Проверка...</p>
+
+    <h3>3. Проверка шрифтов Google:</h3>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Kaushan+Script&display=swap" rel="stylesheet">
+    <p>⏳ Проверьте загрузку во вкладке Network (должны быть запросы к fonts.googleapis.com и fonts.gstatic.com)</p>
+
+    <h3>4. Проверка изображений:</h3>
+    <p>Загрузите <code>images/</code> папку вместе с index.html или используйте локальный сервер</p>
+  </div>
+
+  <div class="test-box error">
+    <h2>⚠️ Распространенные проблемы</h2>
+    <ul>
+      <li><strong>Кодировка файлов:</strong> Убедитесь, что index.html сохранен в UTF-8 без BOM</li>
+      <li><strong>Пути к файлам:</strong> Все файлы должны быть в правильных папках: css/, js/, images/</li>
+      <li><strong>CORS:</strong> При открытии через file:// могут быть проблемы с шрифтами Google. Используйте локальный сервер.</li>
+      <li><strong>JavaScript ошибки:</strong> Откройте Console и исправьте любые синтаксические ошибки</li>
+      <li><strong>CSS ошибки:</strong> Проверьте, что style.css не содержит синтаксических ошибок</li>
+    </ul>
+  </div>
+
+  <div class="test-box info">
+    <h2>🚀 Решения</h2>
+    <ol>
+      <li><strong>Используйте локальный сервер:</strong>
+        <pre>python -m http.server 8000</pre>
+        или
+        <pre>npx serve .</pre>
+        Затем откройте <code>http://localhost:8000</code>
+      </li>
+      <li><strong>Проверьте кодировку:</strong>
+        <pre>chcp 65001  # Windows CMD
+file -I index.html  # Linux/Mac</pre>
+      </li>
+      <li><strong>Проверьте консоль на ошибки:</strong> Скопируйте и отправьте все сообщения из Console</li>
+    </ol>
+  </div>
+
+  <div class="test-box success" id="final-note" style="display:none;">
+    <h2>✅ Все работает!</h2>
+    <p>Если вы видите это сообщение, значит:</p>
+    <ul>
+      <li>CSS загрузился</li>
+      <li>JS выполнился без ошибок</li>
+      <li>Шрифты доступны</li>
+    </ul>
+    <p><strong>Теперь проверьте основной index.html</strong> - он должен отображаться корректно.</p>
+  </div>
+
+  <script>
+    // Show final note if everything ok
+    setTimeout(() => {
+      const cssOk = document.getElementById('css-result').textContent.includes('✅');
+      const jsOk = document.getElementById('js-result').textContent.includes('✅');
+      if (cssOk && jsOk) {
+        document.getElementById('final-note').style.display = 'block';
+      }
+    }, 1500);
+  </script>
+
+  <hr>
+  <p><strong>Откройте этот файл в браузере и просмотрите консоль разработчика (F12)</strong></p>
+</body>
+</html>

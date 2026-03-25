@@ -1,0 +1,9 @@
+## Project files
+.venv
+.idea/
+.DS_Store
+.env
+.vscode/
+.crush/
+tmp.txt
+desktop.ini
